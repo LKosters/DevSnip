@@ -7,6 +7,7 @@ import { Book, Link2, ImageIcon, Zap } from "lucide-react"
 import { motion } from "framer-motion"
 import { useInView } from "framer-motion"
 import { useRef } from "react"
+import { UserButton, SignInButton, SignUpButton, useUser, SignedOut } from "@clerk/nextjs"
 
 const jost = Jost({
   subsets: ["latin"],
@@ -67,15 +68,24 @@ export default function Home() {
             1.0
           </motion.span>
         </div>
-        <div className="flex gap-6">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button variant="outline" className="text-black text-lg">
-              Log in
-            </Button>
-          </motion.div>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button className="text-lg">Register</Button>
-          </motion.div>
+        <div className="flex gap-6 items-center">
+          <div className="flex items-center gap-6">
+            <UserButton afterSignOutUrl="/" />
+            <SignedOut>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <SignInButton mode="modal">
+                  <Button variant="outline" className="text-black text-lg">
+                    Log in
+                  </Button>
+                </SignInButton>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <SignUpButton mode="modal">
+                  <Button className="text-lg">Register</Button>
+                </SignUpButton>
+              </motion.div>
+            </SignedOut>
+          </div>
         </div>
       </motion.header>
 
