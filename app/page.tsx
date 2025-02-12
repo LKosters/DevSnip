@@ -3,11 +3,11 @@
 import { Jost } from "next/font/google"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Book, Link2, ImageIcon, Zap } from "lucide-react"
+import { Book, Link2, ImageIcon, Zap, Link } from "lucide-react"
 import { motion } from "framer-motion"
 import { useInView } from "framer-motion"
 import { useRef } from "react"
-import { UserButton, SignInButton, SignUpButton, useUser, SignedOut } from "@clerk/nextjs"
+import { UserButton, SignInButton, SignUpButton, useUser, SignedOut, SignedIn } from "@clerk/nextjs"
 
 const jost = Jost({
   subsets: ["latin"],
@@ -70,6 +70,13 @@ export default function Home() {
         </div>
         <div className="flex gap-6 items-center">
           <div className="flex items-center gap-6">
+            <SignedIn>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button variant="outline" className="text-black text-lg">
+                    View Snippets
+                  </Button>
+              </motion.div>
+            </SignedIn>
             <UserButton afterSignOutUrl="/" />
             <SignedOut>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
