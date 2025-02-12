@@ -6,6 +6,7 @@ import {
   UserButton
 } from '@clerk/nextjs'
 import './globals.css'
+import { Jost } from "next/font/google"
 
 const appearance = {
   layout: {
@@ -40,6 +41,11 @@ const appearance = {
   },
 }
 
+const jost = Jost({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+})
+
 export const metadata = {
   title: 'DevSnip',
   description: 'DevSnip is a platform for sharing code snippets with ease.',
@@ -52,7 +58,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider appearance={appearance}>
-      <html lang="en">
+      <html lang="en" className={jost.className}>
         <body>
           {children}
         </body>

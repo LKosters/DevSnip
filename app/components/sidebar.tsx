@@ -23,13 +23,13 @@ export function Sidebar() {
         <nav>
           <ul className="space-y-2">
             <li>
-              <Link href="/dashboard" className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded">
+              <Link href="/dashboard" className="flex items-center space-x-2 p-2 rounded">
                 <Home className="h-5 w-5" />
                 <span>Dashboard</span>
               </Link>
             </li>
             <li>
-              <Link href="/user" className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded">
+              <Link href="/user" className="flex items-center space-x-2 p-2 rounded">
                 <User className="h-5 w-5" />
                 <span>User</span>
               </Link>

@@ -49,27 +49,33 @@ export default function Home() {
   const [codeSnippets, setCodeSnippets] = useState(initialCodeSnippets)
   const [isPopupOpen, setIsPopupOpen] = useState(false)
 
-  const handleCreateSnippet = (newSnippet) => {
+  const handleCreateSnippet = (newSnippet: {
+    name: string;
+    language: string;
+    code: string;
+  }) => {
     setCodeSnippets([...codeSnippets, { ...newSnippet, id: Date.now() }])
   }
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-white">All your code snippets</h1>
         <Button onClick={() => setIsPopupOpen(true)}>
           <PlusCircle className="h-5 w-5 mr-2" />
-          Create Snippet
+          Create a snippet
         </Button>
       </div>
       <motion.div 
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+        className="columns-1 lg:columns-2 gap-6"
         variants={container}
         initial="hidden"
         animate="visible"
       >
         {codeSnippets.map((snippet) => (
-          <CodeSnippet key={snippet.id} name={snippet.name} language={snippet.language} code={snippet.code} />
+          <div key={snippet.id} className="break-inside-avoid mb-6">
+            <CodeSnippet name={snippet.name} language={snippet.language} code={snippet.code} />
+          </div>
         ))}
       </motion.div>
       <CreateSnippetPopup
