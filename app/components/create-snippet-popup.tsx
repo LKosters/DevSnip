@@ -20,6 +20,22 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
   const { toast } = useToast()
   const popupRef = useRef<HTMLDivElement>(null)
 
+  // Add supported languages array
+  const supportedLanguages = [
+    "javascript",
+    "typescript",
+    "python",
+    "java",
+    "c++",
+    "ruby",
+    "go",
+    "rust",
+    "html",
+    "css",
+    "sql",
+    "php"
+  ]
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -52,7 +68,7 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
       toast({
         title: "Error",
         description: "Please fill in all fields.",
-        status: "error"
+        variant: "destructive"
       })
     }
   }
@@ -99,14 +115,20 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
                 <label htmlFor="language" className="block text-sm font-medium text-white">
                   Language
                 </label>
-                <input
-                  type="text"
+                <select
                   id="language"
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
                   className="bg-[#1C1C1C] mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   required
-                />
+                >
+                  <option value="">Select a language</option>
+                  {supportedLanguages.map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang.charAt(0).toUpperCase() + lang.slice(1)}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="mb-4">
                 <label htmlFor="code" className="block text-sm font-medium text-white">
