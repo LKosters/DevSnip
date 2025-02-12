@@ -4,6 +4,20 @@ import { useState } from "react"
 import { Copy, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
+import { motion } from "framer-motion"
+
+const fadeInScale = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15,
+    },
+  },
+}
 
 interface CodeSnippetProps {
   name: string
@@ -34,7 +48,12 @@ export function CodeSnippet({ name, language, code }: CodeSnippetProps) {
   }
 
   return (
-    <div className="bg-[#292828] text-white p-6 rounded-lg shadow-md">
+    <motion.div
+      variants={fadeInScale}
+      whileHover={{ y: -5 }}
+      transition={{ type: "spring", stiffness: 300 }}
+      className="bg-[#292828] text-white p-6 rounded-lg shadow-md"
+    >
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">{name}</h3>
         <span className="text-sm text-gray-500">{language}</span>
@@ -52,7 +71,7 @@ export function CodeSnippet({ name, language, code }: CodeSnippetProps) {
           Share
         </Button>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

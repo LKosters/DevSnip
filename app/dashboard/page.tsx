@@ -5,6 +5,17 @@ import { CodeSnippet } from "../components/code-snippet"
 import { CreateSnippetPopup } from "../components/create-snippet-popup"
 import { Button } from "@/components/ui/button"
 import { PlusCircle } from "lucide-react"
+import { motion } from "framer-motion"
+
+const container = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+}
 
 // Dummy data for initial code snippets
 const initialCodeSnippets = [
@@ -51,11 +62,16 @@ export default function Home() {
           Create Snippet
         </Button>
       </div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <motion.div 
+        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+        variants={container}
+        initial="hidden"
+        animate="visible"
+      >
         {codeSnippets.map((snippet) => (
           <CodeSnippet key={snippet.id} name={snippet.name} language={snippet.language} code={snippet.code} />
         ))}
-      </div>
+      </motion.div>
       <CreateSnippetPopup
         isOpen={isPopupOpen}
         onClose={() => setIsPopupOpen(false)}

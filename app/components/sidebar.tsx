@@ -8,7 +8,8 @@ export function Sidebar() {
   return (
     <div className="w-64 h-full shadow-md bg-[#292828] text-white">
       <div className="p-6">
-      <div className="flex items-center gap-2 mb-10">
+        <Link href="/">
+        <div className="flex items-center gap-2 mb-10">
           <span className="text-xl font-bold">DevSnip</span>
           <motion.span
             className="rounded bg-purple-600 px-2 py-0.5 text-sm"
@@ -18,6 +19,7 @@ export function Sidebar() {
             1.0
           </motion.span>
         </div>
+        </Link>
         <nav>
           <ul className="space-y-2">
             <li>
