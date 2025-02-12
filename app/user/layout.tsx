@@ -1,11 +1,14 @@
 import "../globals.css"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Jost } from "next/font/google"
 import type React from "react"
 import { Sidebar } from "../components/sidebar"
 import { ToastProvider, ToastContainer } from "@/components/ui/use-toast"
 
-const inter = Inter({ subsets: ["latin"] })
+const jost = Jost({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+})
 
 export const metadata: Metadata = {
   title: "CodeSnippets Dashboard",
@@ -19,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={jost.className}>
         <ToastProvider>
           <div className="flex h-screen bg-[#1C1C1C]">
             <Sidebar />
