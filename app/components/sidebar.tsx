@@ -1,10 +1,16 @@
 'use client'
 
 import Link from "next/link"
-import { Home, User } from "lucide-react"
+import { Home, User, LogOut } from "lucide-react"
 import { motion } from "framer-motion"
+import { useClerk } from "@clerk/nextjs"
+import { useRouter, usePathname } from "next/navigation"
 
 export function Sidebar() {
+  const { signOut } = useClerk()
+  const router = useRouter()
+  const pathname = usePathname()
+
   return (
     <div className="w-64 h-full shadow-md bg-[#292828] text-white">
       <div className="p-6">
@@ -25,7 +31,9 @@ export function Sidebar() {
             <li>
               <Link href="/dashboard">
                 <motion.div 
-                  className="flex items-center space-x-2 p-2 rounded hover:bg-purple-600/20"
+                  className={`flex items-center space-x-2 p-2 rounded hover:bg-purple-600/20 ${
+                    pathname === '/dashboard' ? 'bg-purple-600/20' : ''
+                  }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -37,7 +45,9 @@ export function Sidebar() {
             <li>
               <Link href="/user">
                 <motion.div
-                  className="flex items-center space-x-2 p-2 rounded hover:bg-purple-600/20"
+                  className={`flex items-center space-x-2 p-2 rounded hover:bg-purple-600/20 ${
+                    pathname === '/user' ? 'bg-purple-600/20' : ''
+                  }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -47,6 +57,17 @@ export function Sidebar() {
               </Link>
             </li>
           </ul>
+          <div className="mt-auto pt-2">
+            <motion.button
+              className="flex items-center space-x-2 p-2 rounded hover:bg-purple-600/20 w-full"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => signOut(() => router.push('/'))}
+            >
+              <LogOut className="h-5 w-5" />
+              <span>Logout</span>
+            </motion.button>
+          </div>
         </nav>
       </div>
     </div>
