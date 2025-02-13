@@ -54,7 +54,7 @@ export default function Home() {
     <div className={`min-h-screen bg-[#1C1C1C] text-white leading-8 ${jost.className}`}>
       {/* Header */}
       <motion.header
-        className="container flex items-center justify-between py-4"
+        className="container flex items-center justify-between py-4 fixed z-20"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
