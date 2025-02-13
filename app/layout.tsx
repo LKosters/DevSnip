@@ -7,6 +7,7 @@ import {
 } from '@clerk/nextjs'
 import './globals.css'
 import { Jost } from "next/font/google"
+import { PostHogProvider } from "./components/providers"
 
 const appearance = {
   layout: {
@@ -57,12 +58,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider appearance={appearance}>
-      <html lang="en" className={jost.className}>
-        <body>
+    <PostHogProvider>
+      <ClerkProvider appearance={appearance}>
+        <html lang="en" className={jost.className}>
+          <body>
           {children}
-        </body>
-      </html>
-    </ClerkProvider>
+          </body>
+        </html>
+      </ClerkProvider>
+    </PostHogProvider>
   )
 }
