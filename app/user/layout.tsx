@@ -11,11 +11,6 @@ const jost = Jost({
   weight: ["400", "500", "600", "700"],
 })
 
-export const metadata: Metadata = {
-  title: "CodeSnippets Dashboard",
-  description: "Manage and share your code snippets",
-}
-
 export default function RootLayout({
   children,
 }: {

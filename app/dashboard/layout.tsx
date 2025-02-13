@@ -12,7 +12,7 @@ const jost = Jost({
 })
 
 export const metadata: Metadata = {
-  title: "CodeSnippets Dashboard",
+  title: "DevSnip | Dashboard",
   description: "Manage and share your code snippets",
 }
 
