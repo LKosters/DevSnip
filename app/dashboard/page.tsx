@@ -61,10 +61,12 @@ export default function Home() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-white">All your code snippets</h1>
-        <Button onClick={() => setIsPopupOpen(true)}>
-          <PlusCircle className="h-5 w-5 mr-2" />
-          Create a snippet
-        </Button>
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Button className="text-lg" onClick={() => setIsPopupOpen(true)}>
+            <PlusCircle className="!size-5 mr-2" />
+            Create a snippet
+          </Button>
+        </motion.div>
       </div>
       <motion.div 
         className="columns-1 lg:columns-2 gap-6"
