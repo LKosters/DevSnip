@@ -132,7 +132,16 @@ export default function Home() {
             Create and share beautiful <span className="text-purple-600">code snippets</span>
           </motion.h1>
           <motion.div className="w-max mx-auto" variants={fadeIn} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button size="lg" className="text-lg">Get started</Button>
+            <SignedIn>
+              <Link href="/dashboard">
+                <Button size="lg" className="text-lg">Get started</Button>
+              </Link>
+            </SignedIn>
+            <SignedOut>
+              <SignUpButton mode="modal">
+                <Button size="lg" className="text-lg">Get started</Button>
+              </SignUpButton>
+            </SignedOut>
           </motion.div>
         </div>
       </motion.section>
