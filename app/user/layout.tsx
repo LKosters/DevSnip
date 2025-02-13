@@ -4,6 +4,7 @@ import { Jost } from "next/font/google"
 import type React from "react"
 import { Sidebar } from "../components/sidebar"
 import { ToastProvider, ToastContainer } from "@/components/ui/use-toast"
+import { PostHogProvider } from "../components/providers"
 
 const jost = Jost({
   subsets: ["latin"],
@@ -23,13 +24,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={jost.className}>
-        <ToastProvider>
-          <div className="flex h-screen bg-[#1C1C1C]">
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto p-8">{children}</main>
-          </div>
-          <ToastContainer />
-        </ToastProvider>
+        <PostHogProvider>
+          <ToastProvider>
+            <div className="flex h-screen bg-[#1C1C1C]">
+              <Sidebar />
+              <main className="flex-1 overflow-y-auto p-8">{children}</main>
+            </div>
+            <ToastContainer />
+          </ToastProvider>
+        </PostHogProvider>
       </body>
     </html>
   )
