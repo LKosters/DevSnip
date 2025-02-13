@@ -6,7 +6,7 @@ import { getUserSnippets, createSnippet, type CodeSnippet } from "@/lib/db";
 import { CodeSnippet as CodeSnippetComponent } from "../components/code-snippet"
 import { CreateSnippetPopup } from "../components/create-snippet-popup"
 import { Button } from "@/components/ui/button"
-import { PlusCircle } from "lucide-react"
+import { PlusCircle, Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
 
 const container = {
@@ -64,7 +64,11 @@ export default function Dashboard() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="size-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
