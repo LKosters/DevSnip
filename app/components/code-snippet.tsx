@@ -39,7 +39,6 @@ const fadeInScale = {
 
 interface CodeSnippetProps {
   name: string
-  language: string
   code: string
 }
 
@@ -67,17 +66,81 @@ const languageMap: { [key: string]: string } = {
   'c++': 'cpp'
 }
 
-export function CodeSnippet({ name, language, code }: CodeSnippetProps) {
+export function CodeSnippet({ name, code }: CodeSnippetProps) {
   const [isCopied, setIsCopied] = useState(false)
+  const [detectedLanguage, setDetectedLanguage] = useState('plaintext')
   const { toast } = useToast()
 
   useEffect(() => {
-    Prism.highlightAll()
+    const detectLanguage = () => {
+      const codeContent = code.trim()
+      
+      // Check for common JS/TS patterns
+      const jsPatterns = [
+        'import', 'export', 'const', 'let', 'var', 'function',
+        '=>', 'class', 'extends', 'return', 'async', 'await',
+        'console.log', 'document.', 'window.', 'new ', 'this.',
+        'undefined', 'null', 'true', 'false', 'setTimeout',
+        'Promise', '.then', '.catch', '.map', '.filter', '.reduce'
+      ]
+      const tsPatterns = ['interface', 'type', 'namespace', 'enum', '<string>', '<number>', '<boolean>']
+      
+      // Check for common method calls with dot notation
+      if (/\w+\.\w+\(.*\)/.test(codeContent)) {
+        return 'javascript'
+      }
+      
+      // Check for TypeScript-specific syntax
+      if (tsPatterns.some(pattern => codeContent.includes(pattern))) {
+        return 'typescript'
+      }
+      
+      // Check for JavaScript patterns
+      if (jsPatterns.some(pattern => codeContent.includes(pattern))) {
+        return 'javascript'
+      }
+      
+      // If there are parentheses, brackets, or semicolons, likely JavaScript
+      if (/[();{}]/.test(codeContent)) {
+        return 'javascript'
+      }
+      
+      // Other language checks...
+      if (codeContent.startsWith('<?php')) return 'php'
+      if (codeContent.includes('def ') || codeContent.includes('import ')) return 'python'
+      if (codeContent.startsWith('package ')) return 'java'
+      if (codeContent.startsWith('#include')) return 'cpp'
+      if (/^(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP)\s/i.test(codeContent)) return 'sql'
+      
+      // Check for JSON
+      if (codeContent.startsWith('{') || codeContent.startsWith('[')) {
+        try {
+          JSON.parse(codeContent)
+          return 'json'
+        } catch {}
+      }
+      
+      // Check for shell scripts
+      if (codeContent.startsWith('#!') || codeContent.startsWith('$')) return 'bash'
+      
+      // Check for Markdown
+      if (codeContent.includes('```') || /^#\s/.test(codeContent)) return 'markdown'
+      
+      return 'javascript' // Default to JavaScript if we detect any code-like syntax
+    }
+
+    const detected = detectLanguage()
+    setDetectedLanguage(detected)
+    
+    // Wait for next tick to ensure DOM is updated
+    setTimeout(() => {
+      Prism.highlightAll()
+    }, 0)
   }, [code])
 
   const getLanguageClass = (lang: string) => {
     const normalizedLang = lang.toLowerCase()
-    return `language-${languageMap[normalizedLang] || 'plaintext'}`
+    return `language-${languageMap[normalizedLang] || 'javascript'}`
   }
 
   const copyToClipboard = () => {
@@ -106,10 +169,10 @@ export function CodeSnippet({ name, language, code }: CodeSnippetProps) {
     >
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">{name}</h3>
-        <span className="text-sm text-gray-500">{language}</span>
+        {/* <span className="text-sm text-gray-500">{detectedLanguage}</span> */}
       </div>
       <pre className="line-numbers bg-[#1C1C1C] p-4 rounded mb-4 overflow-x-auto">
-        <code className={getLanguageClass(language)}>{code}</code>
+        <code className={getLanguageClass(detectedLanguage)}>{code}</code>
       </pre>
       <div className="flex space-x-4 mt-5">
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

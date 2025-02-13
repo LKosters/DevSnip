@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion"
 interface CreateSnippetPopupProps {
   isOpen: boolean
   onClose: () => void
-  onCreateSnippet: (snippet: { name: string; language: string; code: string }) => void
+  onCreateSnippet: (snippet: { name: string; language?: string; code: string }) => void
 }
 
 export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateSnippetPopupProps) {
@@ -54,7 +54,7 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (name && language && code) {
+    if (name && code) {
       onCreateSnippet({ name, language, code })
       setName("")
       setLanguage("")
@@ -67,8 +67,8 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
     } else {
       toast({
         title: "Error",
-        description: "Please fill in all fields.",
-        variant: "destructive"
+        description: "Please fill in the required fields.",
+        status: "error"
       })
     }
   }
@@ -111,7 +111,7 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
                   required
                 />
               </div>
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <label htmlFor="language" className="block text-sm font-medium text-white">
                   Language
                 </label>
@@ -129,7 +129,7 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
               <div className="mb-4">
                 <label htmlFor="code" className="block text-sm font-medium text-white">
                   Code
