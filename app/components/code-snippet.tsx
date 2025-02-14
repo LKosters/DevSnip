@@ -258,30 +258,36 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete }: CodeSnippetPro
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">{name}</h3>
         <div className="flex space-x-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={exportAsPNG}
-            className="text-gray-400 hover:text-white"
-          >
-            <Image className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onEdit}
-            className="text-gray-400 hover:text-white"
-          >
-            <Pencil className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowDeleteDialog(true)}
-            className="text-gray-400 hover:text-red-500"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={exportAsPNG}
+              className="text-gray-400"
+            >
+              <Image className="h-4 w-4" />
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onEdit}
+              className="text-gray-400"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowDeleteDialog(true)}
+              className="text-gray-400"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </motion.div>
         </div>
       </div>
       <pre id={`code-${id}`} className="line-numbers bg-[#1C1C1C] p-4 rounded mb-4 overflow-x-auto">
