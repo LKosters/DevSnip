@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Copy, Share2, Pencil, Trash2 } from "lucide-react"
+import { Copy, Share2, Pencil, Trash2, Image } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import { motion } from "framer-motion"
@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { db } from "@/lib/firebase"
 import { doc, deleteDoc } from "firebase/firestore"
+import html2canvas from "html2canvas"
 
 const fadeInScale = {
   hidden: { opacity: 0, scale: 0.9 },
@@ -192,8 +193,63 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete }: CodeSnippetPro
     }
   }
 
+  const exportAsPNG = async () => {
+    const codeElement = document.getElementById(`code-${id}`)
+    if (codeElement) {
+      try {
+        // Force Prism to rehighlight before capture
+        Prism.highlightElement(codeElement.querySelector('code'))
+        
+        // Wait a bit for the highlighting to complete
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        const canvas = await html2canvas(codeElement, {
+          backgroundColor: "#1C1C1C",
+          scale: 2,
+          padding: 20,
+          width: codeElement.scrollWidth,
+          onclone: (clonedDoc, element) => {
+            // Ensure line numbers are visible and properly aligned
+            element.style.paddingLeft = '3.8em'
+            element.style.width = `${codeElement.scrollWidth}px`
+            element.style.maxWidth = 'none'
+            element.style.overflow = 'visible'
+            
+            const codeBlock = element.querySelector('code')
+            if (codeBlock) {
+              codeBlock.style.whiteSpace = 'pre'
+              codeBlock.style.width = '100%'
+            }
+            
+            const lineNumbers = element.querySelectorAll('.line-numbers-rows span')
+            lineNumbers.forEach(line => {
+              line.style.paddingRight = '1em'
+              line.style.display = 'block'
+            })
+          }
+        })
+        
+        const link = document.createElement("a")
+        link.download = `${name.replace(/\s+/g, "-")}-code.png`
+        link.href = canvas.toDataURL()
+        link.click()
+        
+        toast({
+          title: "Success",
+          description: "Code exported as PNG",
+        })
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to export code. Please try again.",
+        })
+      }
+    }
+  }
+
   return (
     <motion.div
+      id={`snippet-${id}`}
       variants={fadeInScale}
       whileHover={{ y: -5 }}
       transition={{ type: "spring", stiffness: 300 }}
@@ -202,25 +258,39 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete }: CodeSnippetPro
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">{name}</h3>
         <div className="flex space-x-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onEdit}
-            className="text-gray-400 hover:text-white"
-          >
-            <Pencil className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowDeleteDialog(true)}
-            className="text-gray-400 hover:text-red-500"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={exportAsPNG}
+              className="text-gray-400"
+            >
+              <Image className="h-4 w-4" />
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onEdit}
+              className="text-gray-400"
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowDeleteDialog(true)}
+              className="text-gray-400"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </motion.div>
         </div>
       </div>
-      <pre className="line-numbers bg-[#1C1C1C] p-4 rounded mb-4 overflow-x-auto">
+      <pre id={`code-${id}`} className="line-numbers bg-[#1C1C1C] p-4 rounded mb-4 overflow-x-auto">
         <code className={getLanguageClass(detectedLanguage)}>{code}</code>
       </pre>
       <div className="flex space-x-4 mt-5">
