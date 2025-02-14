@@ -8,6 +8,7 @@ import { CreateSnippetPopup } from "../components/create-snippet-popup"
 import { Button } from "@/components/ui/button"
 import { PlusCircle, Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
+import { EditSnippetPopup } from "../components/edit-snippet-popup"
 
 const container = {
   hidden: { opacity: 0 },
@@ -24,6 +25,11 @@ export default function Dashboard() {
   const [snippets, setSnippets] = useState<CodeSnippet[]>([]);
   const [loading, setLoading] = useState(true);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [editingSnippet, setEditingSnippet] = useState<{
+    id: string
+    name: string
+    code: string
+  } | null>(null)
 
   useEffect(() => {
     async function loadSnippets() {
@@ -63,6 +69,16 @@ export default function Dashboard() {
     }
   };
 
+  const refreshSnippets = async () => {
+    if (!user?.id) return
+    try {
+      const userSnippets = await getUserSnippets(user.id)
+      setSnippets(userSnippets)
+    } catch (error) {
+      console.error("Error refreshing snippets:", error)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -90,7 +106,13 @@ export default function Dashboard() {
       >
         {snippets.map((snippet) => (
           <div key={snippet.id} className="break-inside-avoid mb-6">
-            <CodeSnippetComponent name={snippet.name} language={snippet.language} code={snippet.code} />
+            <CodeSnippetComponent
+              id={snippet.id}
+              name={snippet.name}
+              code={snippet.code}
+              onEdit={() => setEditingSnippet(snippet)}
+              onDelete={refreshSnippets}
+            />
           </div>
         ))}
       </motion.div>
@@ -99,6 +121,15 @@ export default function Dashboard() {
         onClose={() => setIsPopupOpen(false)}
         onCreateSnippet={handleCreateSnippet}
       />
+
+      {editingSnippet && (
+        <EditSnippetPopup
+          isOpen={!!editingSnippet}
+          onClose={() => setEditingSnippet(null)}
+          onUpdate={refreshSnippets}
+          snippet={editingSnippet}
+        />
+      )}
     </div>
   )
 }

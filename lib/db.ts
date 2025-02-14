@@ -1,45 +1,42 @@
 import { db } from "./firebase";
-import { collection, addDoc, query, where, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs, deleteDoc, doc, updateDoc, serverTimestamp, Timestamp } from "firebase/firestore";
 
 export interface CodeSnippet {
-  id?: string;
+  id: string;
   userId: string;
   name: string;
   language: string;
   code: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
-export async function createSnippet(snippet: Omit<CodeSnippet, 'id' | 'createdAt' | 'updatedAt'>) {
-  try {
-    const docRef = await addDoc(collection(db, "snippets"), {
-      ...snippet,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
-    return docRef.id;
-  } catch (error) {
-    console.error("Error adding snippet:", error);
-    throw error;
-  }
+export async function createSnippet({ userId, name, language, code }: {
+  userId: string;
+  name: string;
+  language: string;
+  code: string;
+}) {
+  return addDoc(collection(db, "snippets"), {
+    userId,
+    name,
+    language,
+    code,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  });
 }
 
-export async function getUserSnippets(userId: string) {
-  try {
-    const snippetsRef = collection(db, "snippets");
-    const q = query(snippetsRef, where("userId", "==", userId));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt?.toDate(),
-      updatedAt: doc.data().updatedAt?.toDate()
-    })) as CodeSnippet[];
-  } catch (error) {
-    console.error("Error getting snippets:", error);
-    throw error;
-  }
+export async function getUserSnippets(userId: string): Promise<CodeSnippet[]> {
+  const q = query(collection(db, "snippets"), where("userId", "==", userId));
+  const querySnapshot = await getDocs(q);
+  
+  return querySnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+    createdAt: doc.data().createdAt,
+    updatedAt: doc.data().updatedAt
+  })) as CodeSnippet[];
 }
 
 export async function deleteSnippet(snippetId: string) {
@@ -56,7 +53,7 @@ export async function updateSnippet(snippetId: string, data: Partial<CodeSnippet
     const snippetRef = doc(db, "snippets", snippetId);
     await updateDoc(snippetRef, {
       ...data,
-      updatedAt: new Date()
+      updatedAt: serverTimestamp()
     });
   } catch (error) {
     console.error("Error updating snippet:", error);
