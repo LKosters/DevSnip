@@ -89,10 +89,10 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-white">All your code snippets</h1>
+      <div className="lg:flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-white mb-5 lg:mb-0">All your code snippets</h1>
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Button className="text-lg" onClick={() => setIsPopupOpen(true)}>
+          <Button className="text-lg w-full lg:w-auto" onClick={() => setIsPopupOpen(true)}>
             <PlusCircle className="!size-5 mr-2" />
             Create a snippet
           </Button>
