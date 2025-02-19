@@ -258,9 +258,9 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete, viewOnly }: Code
       transition={{ type: "spring", stiffness: 300 }}
       className="bg-[#292828] text-white p-6 rounded-lg shadow-md"
     >
-      <div className="flex justify-between items-center mb-4">
+      <div className="lg:flex-row flex flex-col justify-between lg:items-center mb-4">
         <h3 className="text-lg font-semibold">{name}</h3>
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 mt-2 lg:mt-0">
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               variant="ghost"
@@ -300,15 +300,15 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete, viewOnly }: Code
       <pre id={`code-${id}`} className="line-numbers bg-[#1C1C1C] p-4 rounded mb-4 overflow-x-auto">
         <code className={getLanguageClass(detectedLanguage)}>{code}</code>
       </pre>
-      <div className="flex space-x-4 mt-5">
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button className="text-black text-lg" variant="outline" size="sm" onClick={copyToClipboard}>
+      <div className="lg:flex lg:space-x-4 mt-5">
+        <motion.div className="mb-2 lg:mb-0" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Button className="text-black text-lg w-full lg:w-auto" variant="outline" size="sm" onClick={copyToClipboard}>
             <Copy className="h-4 w-4 mr-2" />
             {isCopied ? "Copied!" : "Copy"}
           </Button>
         </motion.div>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button className="text-black text-lg" variant="outline" size="sm" onClick={shareSnippet}>
+          <Button className="text-black text-lg w-full lg:w-auto" variant="outline" size="sm" onClick={shareSnippet}>
             <Share2 className="h-4 w-4 mr-2" />
             Share
           </Button>

@@ -107,7 +107,7 @@ export default function Home() {
         animate="visible"
       >
         <motion.div
-          className="absolute right-60 top-30"
+          className="absolute right-10 lg:right-60 top-30"
           animate={{
             y: [0, -10, 0],
           }}
@@ -128,7 +128,7 @@ export default function Home() {
           >
             1.0 out now
           </motion.div>
-          <motion.h1 variants={fadeIn} className="mb-8 text-6xl font-bold leading-tight">
+          <motion.h1 variants={fadeIn} className="mb-8 text-5xl lg:text-6xl font-bold leading-tight">
             Create and share beautiful <span className="text-purple-600">code snippets</span>
           </motion.h1>
           <motion.div className="w-max mx-auto" variants={fadeIn} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -150,7 +150,7 @@ export default function Home() {
       <div className="bg-[#292828]">
         <motion.section
           ref={featuresRef}
-          className="container grid gap-8 py-24 md:grid-cols-3"
+          className="container grid gap-8 py-10 lg:py-24 md:grid-cols-3"
           variants={container}
           initial="hidden"
           animate={isInViewFeatures ? "visible" : "hidden"}
@@ -184,7 +184,7 @@ export default function Home() {
       <div className="bg-[#292828]">
         <motion.section
           ref={codeRef}
-          className="container grid gap-20 py-24 md:grid-cols-5"
+          className="container grid gap-10 lg:gap-20 py-10 lg:py-24 md:grid-cols-5"
           initial="hidden"
           animate={isInViewCode ? "visible" : "hidden"}
         >
@@ -257,13 +257,13 @@ export default function Home() {
       {/* CTA Section */}
       <div className="bg-[#1E1E1E]">
         <motion.section
-          className="container py-24 flex items-center justify-between"
+          className="container py-10 lg:py-24 flex-col lg:flex-row flex lg:items-center justify-between gap-5 lg:gap-0"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
       >
-        <h2 className="text-5xl font-bold">
+        <h2 className="text-4xl lg:text-5xl font-bold">
           Make it easier to share <br />
           <span className="text-purple-600">code snippets</span>
         </h2>
