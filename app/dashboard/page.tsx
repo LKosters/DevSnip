@@ -1,11 +1,14 @@
 "use client"
 
-import { useState } from "react"
-import { CodeSnippet } from "../components/code-snippet"
+import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import { getUserSnippets, createSnippet, type CodeSnippet } from "@/lib/db";
+import { CodeSnippet as CodeSnippetComponent } from "../components/code-snippet"
 import { CreateSnippetPopup } from "../components/create-snippet-popup"
 import { Button } from "@/components/ui/button"
-import { PlusCircle } from "lucide-react"
+import { PlusCircle, Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
+import { EditSnippetPopup } from "../components/edit-snippet-popup"
 
 const container = {
   hidden: { opacity: 0 },
@@ -17,44 +20,71 @@ const container = {
   },
 }
 
-// Dummy data for initial code snippets
-const initialCodeSnippets = [
-  {
-    id: 1,
-    name: "Hello World in Python",
-    language: "Python",
-    code: 'print("Hello, World!")',
-  },
-  {
-    id: 2,
-    name: "React Function Component",
-    language: "JavaScript",
-    code: `import React from 'react';
+export default function Dashboard() {
+  const { user } = useUser();
+  const [snippets, setSnippets] = useState<CodeSnippet[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [editingSnippet, setEditingSnippet] = useState<{
+    id: string
+    name: string
+    code: string
+  } | null>(null)
 
-const MyComponent = ({ name }) => {
-  return <div>Hello, {name}!</div>;
-};
+  useEffect(() => {
+    async function loadSnippets() {
+      if (user?.id) {
+        try {
+          const userSnippets = await getUserSnippets(user.id);
+          setSnippets(userSnippets);
+        } catch (error) {
+          console.error("Error loading snippets:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    }
 
-export default MyComponent;`,
-  },
-  {
-    id: 3,
-    name: "SQL Select Query",
-    language: "SQL",
-    code: "SELECT * FROM users WHERE age > 18;",
-  },
-]
+    loadSnippets();
+  }, [user?.id]);
 
-export default function Home() {
-  const [codeSnippets, setCodeSnippets] = useState(initialCodeSnippets)
-  const [isPopupOpen, setIsPopupOpen] = useState(false)
-
-  const handleCreateSnippet = (newSnippet: {
+  const handleCreateSnippet = async (newSnippet: {
     name: string;
     language: string;
     code: string;
   }) => {
-    setCodeSnippets([...codeSnippets, { ...newSnippet, id: Date.now() }])
+    if (!user?.id) return;
+
+    try {
+      await createSnippet({
+        userId: user.id,
+        ...newSnippet
+      });
+      
+      // Reload snippets after creation
+      const updatedSnippets = await getUserSnippets(user.id);
+      setSnippets(updatedSnippets);
+    } catch (error) {
+      console.error("Error creating snippet:", error);
+    }
+  };
+
+  const refreshSnippets = async () => {
+    if (!user?.id) return
+    try {
+      const userSnippets = await getUserSnippets(user.id)
+      setSnippets(userSnippets)
+    } catch (error) {
+      console.error("Error refreshing snippets:", error)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="size-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
@@ -74,9 +104,15 @@ export default function Home() {
         initial="hidden"
         animate="visible"
       >
-        {codeSnippets.map((snippet) => (
+        {snippets.map((snippet) => (
           <div key={snippet.id} className="break-inside-avoid mb-6">
-            <CodeSnippet name={snippet.name} language={snippet.language} code={snippet.code} />
+            <CodeSnippetComponent
+              id={snippet.id}
+              name={snippet.name}
+              code={snippet.code}
+              onEdit={() => setEditingSnippet(snippet)}
+              onDelete={refreshSnippets}
+            />
           </div>
         ))}
       </motion.div>
@@ -85,6 +121,15 @@ export default function Home() {
         onClose={() => setIsPopupOpen(false)}
         onCreateSnippet={handleCreateSnippet}
       />
+
+      {editingSnippet && (
+        <EditSnippetPopup
+          isOpen={!!editingSnippet}
+          onClose={() => setEditingSnippet(null)}
+          onUpdate={refreshSnippets}
+          snippet={editingSnippet}
+        />
+      )}
     </div>
   )
 }
