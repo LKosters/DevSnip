@@ -5,6 +5,8 @@ import type React from "react"
 import { Sidebar } from "../components/sidebar"
 import { ToastProvider, ToastContainer } from "@/components/ui/use-toast"
 import { PostHogProvider } from "../components/providers"
+import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
 
 const jost = Jost({
   subsets: ["latin"],
@@ -16,11 +18,15 @@ export const metadata: Metadata = {
   description: "Manage and share your code snippets",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+
+  const { userId } = await auth()
+  if (!userId) return redirect('/')
+
   return (
     <html lang="en">
       <body className={jost.className}>

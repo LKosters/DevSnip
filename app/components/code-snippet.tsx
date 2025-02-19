@@ -56,6 +56,7 @@ interface CodeSnippetProps {
   code: string
   onEdit: () => void
   onDelete: () => void
+  viewOnly: boolean
 }
 
 const languageMap: { [key: string]: string } = {
@@ -82,7 +83,7 @@ const languageMap: { [key: string]: string } = {
   'c++': 'cpp'
 }
 
-export function CodeSnippet({ id, name, code, onEdit, onDelete }: CodeSnippetProps) {
+export function CodeSnippet({ id, name, code, onEdit, onDelete, viewOnly }: CodeSnippetProps) {
   const [isCopied, setIsCopied] = useState(false)
   const [detectedLanguage, setDetectedLanguage] = useState('plaintext')
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -171,9 +172,11 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete }: CodeSnippetPro
   }
 
   const shareSnippet = () => {
+    const snippetUrl = `${window.location.origin}/snippets/${id}`
+    navigator.clipboard.writeText(snippetUrl)
     toast({
-      title: "Share functionality",
-      description: "This would open a share dialog in a real application.",
+      title: "Link copied",
+      description: "Sharing link copied to clipboard.",
     })
   }
 
@@ -268,26 +271,30 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete }: CodeSnippetPro
               <Image className="h-4 w-4" />
             </Button>
           </motion.div>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onEdit}
-              className="text-gray-400"
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-          </motion.div>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowDeleteDialog(true)}
-              className="text-gray-400"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </motion.div>
+          {!viewOnly && (
+            <>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onEdit}
+                  className="text-gray-400"
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowDeleteDialog(true)}
+                  className="text-gray-400"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </motion.div>
+            </>
+          )}
         </div>
       </div>
       <pre id={`code-${id}`} className="line-numbers bg-[#1C1C1C] p-4 rounded mb-4 overflow-x-auto">
