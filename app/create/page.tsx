@@ -10,6 +10,8 @@ export default function CreatePage() {
   const [language, setLanguage] = useState("")
   const [code, setCode] = useState("")
   const { toast } = useToast()
+  
+  const titleCharLimit = 50
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,8 +24,7 @@ export default function CreatePage() {
     } else {
       toast({
         title: "Error",
-        description: "Please fill in all fields.",
-        variant: "destructive"
+        description: "Please fill in all fields."
       })
     }
   }
@@ -44,10 +45,18 @@ export default function CreatePage() {
             type="text"
             id="name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length <= titleCharLimit) {
+                setName(e.target.value)
+              }
+            }}
+            maxLength={titleCharLimit}
             className="w-full p-2 rounded-md bg-[#292828] text-white border border-gray-600"
             placeholder="Enter snippet name"
           />
+          <div className="text-xs text-gray-400 mt-1">
+            {name.length}/{titleCharLimit} characters
+          </div>
         </div>
 
         <div>
