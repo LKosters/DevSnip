@@ -5,16 +5,34 @@ import { Home, User, LogOut, ChevronLeft, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { useClerk } from "@clerk/nextjs"
 import { useRouter, usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export function Sidebar() {
   const { signOut } = useClerk()
   const router = useRouter()
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768
+      setIsMobile(mobile)
+      if (mobile) {
+        setIsCollapsed(true)
+      }
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile)
+    }
+  }, [])
 
   return (
-    <div className={`${isCollapsed ? 'w-24' : 'w-64'} h-full shadow-md bg-[#292828] text-white transition-all duration-300 relative`}>
+    <div className={`${isCollapsed ? 'w-20' : isMobile ? 'w-56' : 'w-64'} h-full shadow-md bg-[#292828] text-white transition-all duration-300 fixed md:relative z-10`}>
       <div className="p-6">
         <Link href="/">
           <div className="flex items-center gap-2 mb-10">
