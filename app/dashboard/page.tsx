@@ -6,7 +6,7 @@ import { getUserSnippets, createSnippet, type CodeSnippet } from "@/lib/db";
 import { CodeSnippet as CodeSnippetComponent } from "../components/code-snippet"
 import { CreateSnippetPopup } from "../components/create-snippet-popup"
 import { Button } from "@/components/ui/button"
-import { PlusCircle, Loader2 } from "lucide-react"
+import { PlusCircle, Loader2, FileX } from "lucide-react"
 import { motion } from "framer-motion"
 import { EditSnippetPopup } from "../components/edit-snippet-popup"
 
@@ -104,22 +104,36 @@ export default function Dashboard() {
         initial="hidden"
         animate="visible"
       >
-        {snippets.map((snippet) => (
-          <div key={snippet.id} className="break-inside-avoid mb-6">
-            <CodeSnippetComponent
-              id={snippet.id}
-              name={snippet.name}
-              code={snippet.code}
-              onEdit={() => setEditingSnippet(snippet)}
-              onDelete={refreshSnippets}
-            />
+        {snippets.length === 0 ? (
+          <div className="flex flex-col w-full">
+            <div>
+            <p className="mt-2 text-gray-400 block">
+              Create your first code snippet by clicking the "Create a snippet" button above.
+            </p>
+            </div>
           </div>
-        ))}
+        ) : (
+          snippets.map((snippet) => (
+            <div key={snippet.id} className="break-inside-avoid mb-6">
+              <CodeSnippetComponent
+                id={snippet.id}
+                name={snippet.name}
+                code={snippet.code}
+                viewOnly={false}
+                onEdit={() => setEditingSnippet(snippet)}
+                onDelete={refreshSnippets}
+              />
+            </div>
+          ))
+        )}
       </motion.div>
       <CreateSnippetPopup
         isOpen={isPopupOpen}
         onClose={() => setIsPopupOpen(false)}
-        onCreateSnippet={handleCreateSnippet}
+        onCreateSnippet={(snippet) => handleCreateSnippet({
+          ...snippet,
+          language: snippet.language || 'javascript'
+        })}
       />
 
       {editingSnippet && (
