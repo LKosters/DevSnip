@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Home, User, LogOut, ChevronLeft, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
-import { useClerk } from "@clerk/nextjs"
+import { useClerk, UserButton } from "@clerk/nextjs"
 import { useRouter, usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 
@@ -64,7 +64,7 @@ export function Sidebar() {
                 </motion.div>
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link href="/user">
                 <motion.div
                   className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'} p-2 rounded hover:bg-purple-600/20 ${
@@ -77,11 +77,14 @@ export function Sidebar() {
                   {!isCollapsed && <span>User</span>}
                 </motion.div>
               </Link>
-            </li>
+            </li> */}
           </ul>
-          <div className="mt-auto pt-2">
+          <div className={`mt-auto pt-2 flex ${isCollapsed ? 'flex-col gap-1' : 'flex-row gap-2'} items-center`}>
+            <div className="w-max flex items-center">
+              <UserButton afterSignOutUrl="/" />
+            </div>
             <motion.button
-              className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'} p-2 rounded hover:bg-purple-600/20 w-full`}
+              className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'} p-2 rounded hover:bg-purple-600/20 w-full flex-1`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => signOut(() => router.push('/'))}
