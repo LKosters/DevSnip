@@ -1,14 +1,15 @@
 "use client"
 
 import { useUser } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { getUserSnippets, createSnippet, type CodeSnippet } from "@/lib/db";
 import { CodeSnippet as CodeSnippetComponent } from "../components/code-snippet"
 import { CreateSnippetPopup } from "../components/create-snippet-popup"
 import { Button } from "@/components/ui/button"
-import { PlusCircle, Loader2, FileX } from "lucide-react"
+import { PlusCircle, Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
 import { EditSnippetPopup } from "../components/edit-snippet-popup"
+import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 
 const container = {
   hidden: { opacity: 0 },
@@ -24,29 +25,89 @@ export default function Dashboard() {
   const { user } = useUser();
   const [snippets, setSnippets] = useState<CodeSnippet[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
+  const [hasMore, setHasMore] = useState(true);
   const [editingSnippet, setEditingSnippet] = useState<{
     id: string
     name: string
     code: string
   } | null>(null)
+  
+  const observer = useRef<IntersectionObserver | null>(null);
+  
+  const loadSnippets = useCallback(async (reset = false) => {
+    if (!user?.id) return;
+    
+    try {
+      if (reset) {
+        setSnippets([]);
+        setLastVisible(null);
+      }
+      
+      setLoading(true);
+      const result = await getUserSnippets(user.id);
+      
+      if (result && result.snippets) {
+        setSnippets(result.snippets);
+        setLastVisible(result.lastVisible);
+        setHasMore(result.snippets.length === 4 && result.lastVisible !== null);
+      } else {
+        setSnippets([]);
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error loading snippets:", error);
+      setSnippets([]);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id]);
+
+  const loadMoreSnippets = useCallback(async () => {
+    if (!user?.id || !lastVisible || !hasMore || loadingMore) return;
+    
+    try {
+      setLoadingMore(true);
+      const result = await getUserSnippets(user.id, 4, lastVisible);
+      
+      if (result && result.snippets && result.snippets.length > 0) {
+        // Always append new snippets to the bottom of the list
+        setSnippets(prev => [...prev, ...result.snippets]);
+        setLastVisible(result.lastVisible);
+        setHasMore(result.snippets.length === 4 && result.lastVisible !== null);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error loading more snippets:", error);
+      setHasMore(false);
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [user?.id, lastVisible, hasMore, loadingMore]);
+  
+  const lastSnippetRef = useCallback((node: HTMLDivElement | null) => {
+    if (loadingMore || !hasMore) return;
+    
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        loadMoreSnippets();
+      }
+    }, { threshold: 0.5 });
+    
+    if (node) observer.current.observe(node);
+  }, [loadingMore, hasMore, loadMoreSnippets]);
 
   useEffect(() => {
-    async function loadSnippets() {
-      if (user?.id) {
-        try {
-          const userSnippets = await getUserSnippets(user.id);
-          setSnippets(userSnippets);
-        } catch (error) {
-          console.error("Error loading snippets:", error);
-        } finally {
-          setLoading(false);
-        }
-      }
+    if (user?.id) {
+      loadSnippets();
     }
-
-    loadSnippets();
-  }, [user?.id]);
+  }, [user?.id, loadSnippets]);
 
   const handleCreateSnippet = async (newSnippet: {
     name: string;
@@ -62,24 +123,18 @@ export default function Dashboard() {
       });
       
       // Reload snippets after creation
-      const updatedSnippets = await getUserSnippets(user.id);
-      setSnippets(updatedSnippets);
+      loadSnippets(true);
     } catch (error) {
       console.error("Error creating snippet:", error);
     }
   };
 
   const refreshSnippets = async () => {
-    if (!user?.id) return
-    try {
-      const userSnippets = await getUserSnippets(user.id)
-      setSnippets(userSnippets)
-    } catch (error) {
-      console.error("Error refreshing snippets:", error)
-    }
-  }
+    if (!user?.id) return;
+    loadSnippets(true);
+  };
 
-  if (loading) {
+  if (loading && snippets.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <Loader2 className="size-8 animate-spin text-primary" />
@@ -98,23 +153,33 @@ export default function Dashboard() {
           </Button>
         </motion.div>
       </div>
-      <motion.div 
-        className="columns-1 lg:columns-2 gap-6"
-        variants={container}
-        initial="hidden"
-        animate="visible"
-      >
-        {snippets.length === 0 ? (
-          <div className="flex flex-col w-full">
-            <div>
+      
+      {/* Hidden in production, useful for debugging */}
+      {/* <div className="mb-4 text-gray-400 text-sm">
+        Loaded {snippets.length} snippets. {hasMore ? 'More available' : 'No more snippets'}
+      </div> */}
+
+      {snippets.length === 0 && !loading ? (
+        <div className="flex flex-col w-full">
+          <div>
             <p className="mt-2 text-gray-400 block">
               Create your first code snippet by clicking the "Create a snippet" button above.
             </p>
-            </div>
           </div>
-        ) : (
-          snippets.map((snippet) => (
-            <div key={snippet.id} className="break-inside-avoid mb-6">
+        </div>
+      ) : (
+        <motion.div 
+          className="columns-1 lg:columns-2 gap-6"
+          variants={container}
+          initial="hidden"
+          animate="visible"
+        >
+          {snippets.map((snippet, index) => (
+            <div 
+              key={snippet.id} 
+              className="break-inside-avoid mb-6"
+              ref={index === snippets.length - 1 ? lastSnippetRef : null}
+            >
               <CodeSnippetComponent
                 id={snippet.id}
                 name={snippet.name}
@@ -124,9 +189,16 @@ export default function Dashboard() {
                 onDelete={refreshSnippets}
               />
             </div>
-          ))
-        )}
-      </motion.div>
+          ))}
+        </motion.div>
+      )}
+      
+      {loadingMore && (
+        <div className="flex justify-center mt-8 mb-8">
+          <Loader2 className="size-6 animate-spin text-primary" />
+        </div>
+      )}
+      
       <CreateSnippetPopup
         isOpen={isPopupOpen}
         onClose={() => setIsPopupOpen(false)}

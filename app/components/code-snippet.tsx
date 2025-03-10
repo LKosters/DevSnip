@@ -205,6 +205,7 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete, viewOnly }: Code
         title: "Snippet deleted",
         description: "The code snippet has been successfully deleted.",
       })
+      setShowDeleteDialog(false)
       onDelete()
     } catch (error) {
       toast({
