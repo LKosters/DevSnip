@@ -25,6 +25,8 @@ export function EditSnippetPopup({ isOpen, onClose, onUpdate, snippet }: EditSni
   const [code, setCode] = useState(snippet.code)
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
+  
+  const titleCharLimit = 50
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,8 +48,7 @@ export function EditSnippetPopup({ isOpen, onClose, onUpdate, snippet }: EditSni
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update the snippet. Please try again.",
-        variant: "destructive",
+        description: "Failed to update the snippet. Please try again."
       })
     } finally {
       setIsLoading(false)
@@ -65,9 +66,17 @@ export function EditSnippetPopup({ isOpen, onClose, onUpdate, snippet }: EditSni
             <Input
               placeholder="Snippet name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= titleCharLimit) {
+                  setName(e.target.value)
+                }
+              }}
+              maxLength={titleCharLimit}
               required
             />
+            <div className="text-xs text-gray-400 mt-1">
+              {name.length}/{titleCharLimit} characters
+            </div>
           </div>
           <div>
             <Textarea

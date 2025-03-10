@@ -19,6 +19,8 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
   const [code, setCode] = useState("")
   const { toast } = useToast()
   const popupRef = useRef<HTMLDivElement>(null)
+  
+  const titleCharLimit = 50
 
   // Add supported languages array
   const supportedLanguages = [
@@ -67,8 +69,7 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
     } else {
       toast({
         title: "Error",
-        description: "Please fill in the required fields.",
-        status: "error"
+        description: "Please fill in the required fields."
       })
     }
   }
@@ -106,10 +107,18 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
                   type="text"
                   id="name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value.length <= titleCharLimit) {
+                      setName(e.target.value)
+                    }
+                  }}
+                  maxLength={titleCharLimit}
                   className="bg-[#1C1C1C] mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                   required
                 />
+                <div className="text-xs text-gray-400 mt-1">
+                  {name.length}/{titleCharLimit} characters
+                </div>
               </div>
               {/* <div className="mb-4">
                 <label htmlFor="language" className="block text-sm font-medium text-white">
