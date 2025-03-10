@@ -259,7 +259,7 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete, viewOnly }: Code
       className="bg-[#292828] text-white p-6 rounded-lg shadow-md"
     >
       <div className="lg:flex-row flex flex-col justify-between lg:items-center mb-4">
-        <h3 className="text-lg font-semibold">{name}</h3>
+        <h3 className="text-lg font-semibold break-words">{name}</h3>
         <div className="flex space-x-2 mt-2 lg:mt-0">
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
