@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Copy, Share2, Pencil, Trash2, Image } from "lucide-react"
+import { Copy, Share2, Pencil, Trash2, Image, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import { motion } from "framer-motion"
@@ -277,6 +277,28 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete, viewOnly }: Code
     }
   }
 
+  const exportAsTXT = () => {
+    try {
+      const blob = new Blob([code], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.download = `${name.replace(/\s+/g, "-")}.txt`;
+      link.href = url;
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Success",
+        description: "Code exported as TXT file",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to export code as TXT. Please try again.",
+      });
+    }
+  }
+
   return (
     <motion.div
       id={`snippet-${id}`}
@@ -296,6 +318,16 @@ export function CodeSnippet({ id, name, code, onEdit, onDelete, viewOnly }: Code
               className="text-gray-400"
             >
               <Image className="h-4 w-4" />
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={exportAsTXT}
+              className="text-gray-400"
+            >
+              <FileText className="h-4 w-4" />
             </Button>
           </motion.div>
           {!viewOnly && (
