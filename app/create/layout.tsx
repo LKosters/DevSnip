@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { Jost } from "next/font/google"
 import type React from "react"
 import { Sidebar } from "../components/sidebar"
-import { ToastProvider, ToastContainer } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 import { PostHogProvider } from "../components/providers"
 
 const jost = Jost({
@@ -25,13 +25,10 @@ export default function CreateLayout({
     <html lang="en">
       <body className={jost.className}>
         <PostHogProvider>
-          <ToastProvider>
-            <div className="flex h-screen bg-[#1C1C1C]">
-              <Sidebar />
-              <main className="flex-1 overflow-y-auto p-8">{children}</main>
-            </div>
-            <ToastContainer />
-          </ToastProvider>
+          <div className="flex h-screen bg-[#1C1C1C]">
+            <Sidebar />
+            <main className="flex-1 overflow-y-auto p-8">{children}</main>
+          </div>
         </PostHogProvider>
       </body>
     </html>

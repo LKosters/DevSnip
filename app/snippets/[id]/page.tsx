@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { db } from "@/lib/firebase"
 import { doc, getDoc } from "firebase/firestore"
 import { CodeSnippet } from "@/app/components/code-snippet"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 
 interface PageProps {
   params: {

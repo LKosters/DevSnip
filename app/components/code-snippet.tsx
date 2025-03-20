@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { Copy, Share2, Pencil, Trash2, Image, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 import { motion } from "framer-motion"
 import Prism from "prismjs"
 import "prismjs/themes/prism-tomorrow.css"
