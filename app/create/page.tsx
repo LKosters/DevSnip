@@ -1,33 +1,33 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
-import { motion } from "framer-motion"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { motion } from "framer-motion";
 
 export default function CreatePage() {
-  const [name, setName] = useState("")
-  const [language, setLanguage] = useState("")
-  const [code, setCode] = useState("")
-  const { toast } = useToast()
-  
-  const titleCharLimit = 50
+  const [name, setName] = useState("");
+  const [language, setLanguage] = useState("");
+  const [code, setCode] = useState("");
+  const { toast } = useToast();
+
+  const titleCharLimit = 50;
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (name && language && code) {
       // Handle submission
       toast({
         title: "Snippet created",
         description: "Your new code snippet has been created successfully.",
-      })
+      });
     } else {
       toast({
         title: "Error",
-        description: "Please fill in all fields."
-      })
+        description: "Please fill in all fields.",
+      });
     }
-  }
+  };
 
   return (
     <motion.div
@@ -38,7 +38,10 @@ export default function CreatePage() {
       <h1 className="text-3xl font-bold mb-6 text-white">Create New Snippet</h1>
       <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-white mb-2"
+          >
             Name
           </label>
           <input
@@ -47,7 +50,7 @@ export default function CreatePage() {
             value={name}
             onChange={(e) => {
               if (e.target.value.length <= titleCharLimit) {
-                setName(e.target.value)
+                setName(e.target.value);
               }
             }}
             maxLength={titleCharLimit}
@@ -60,7 +63,10 @@ export default function CreatePage() {
         </div>
 
         <div>
-          <label htmlFor="language" className="block text-sm font-medium text-white mb-2">
+          <label
+            htmlFor="language"
+            className="block text-sm font-medium text-white mb-2"
+          >
             Language
           </label>
           <select
@@ -79,7 +85,10 @@ export default function CreatePage() {
         </div>
 
         <div>
-          <label htmlFor="code" className="block text-sm font-medium text-white mb-2">
+          <label
+            htmlFor="code"
+            className="block text-sm font-medium text-white mb-2"
+          >
             Code
           </label>
           <textarea
@@ -97,6 +106,5 @@ export default function CreatePage() {
         </Button>
       </form>
     </motion.div>
-  )
+  );
 }
-

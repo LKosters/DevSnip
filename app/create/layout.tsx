@@ -1,25 +1,25 @@
-import "../globals.css"
-import type { Metadata } from "next"
-import { Jost } from "next/font/google"
-import type React from "react"
-import { Sidebar } from "../components/sidebar"
-import { ToastProvider, ToastContainer } from "@/components/ui/use-toast"
-import { PostHogProvider } from "../components/providers"
+import "../globals.css";
+import type { Metadata } from "next";
+import { Jost } from "next/font/google";
+import type React from "react";
+import { Sidebar } from "../components/sidebar";
+import { ToastProvider, ToastContainer } from "@/components/ui/use-toast";
+import { PostHogProvider } from "../components/providers";
 
 const jost = Jost({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-})
+});
 
 export const metadata: Metadata = {
   title: "Create New Snippet",
   description: "Create and share your code snippets",
-}
+};
 
 export default function CreateLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -35,5 +35,5 @@ export default function CreateLayout({
         </PostHogProvider>
       </body>
     </html>
-  )
+  );
 }

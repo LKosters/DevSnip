@@ -1,26 +1,34 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
-import { motion, AnimatePresence } from "framer-motion"
+import type React from "react";
+import { useState, useRef, useEffect } from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface CreateSnippetPopupProps {
-  isOpen: boolean
-  onClose: () => void
-  onCreateSnippet: (snippet: { name: string; language?: string; code: string }) => void
+  isOpen: boolean;
+  onClose: () => void;
+  onCreateSnippet: (snippet: {
+    name: string;
+    language?: string;
+    code: string;
+  }) => void;
 }
 
-export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateSnippetPopupProps) {
-  const [name, setName] = useState("")
-  const [language, setLanguage] = useState("")
-  const [code, setCode] = useState("")
-  const { toast } = useToast()
-  const popupRef = useRef<HTMLDivElement>(null)
-  
-  const titleCharLimit = 50
+export function CreateSnippetPopup({
+  isOpen,
+  onClose,
+  onCreateSnippet,
+}: CreateSnippetPopupProps) {
+  const [name, setName] = useState("");
+  const [language, setLanguage] = useState("");
+  const [code, setCode] = useState("");
+  const { toast } = useToast();
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  const titleCharLimit = 50;
 
   // Add supported languages array
   const supportedLanguages = [
@@ -35,44 +43,47 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
     "html",
     "css",
     "sql",
-    "php"
-  ]
+    "php",
+  ];
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-        onClose()
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        onClose();
       }
     }
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen, onClose])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose]);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (name && code) {
-      onCreateSnippet({ name, language, code })
-      setName("")
-      setLanguage("")
-      setCode("")
-      onClose()
+      onCreateSnippet({ name, language, code });
+      setName("");
+      setLanguage("");
+      setCode("");
+      onClose();
       toast({
         title: "Snippet created",
         description: "Your new code snippet has been created successfully.",
-      })
+      });
     } else {
       toast({
         title: "Error",
-        description: "Please fill in the required fields."
-      })
+        description: "Please fill in the required fields.",
+      });
     }
-  }
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -100,7 +111,10 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
             </div>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-medium text-white">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-white"
+                >
                   Name
                 </label>
                 <input
@@ -109,7 +123,7 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
                   value={name}
                   onChange={(e) => {
                     if (e.target.value.length <= titleCharLimit) {
-                      setName(e.target.value)
+                      setName(e.target.value);
                     }
                   }}
                   maxLength={titleCharLimit}
@@ -140,7 +154,10 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
                 </select>
               </div> */}
               <div className="mb-4">
-                <label htmlFor="code" className="block text-sm font-medium text-white">
+                <label
+                  htmlFor="code"
+                  className="block text-sm font-medium text-white"
+                >
                   Code
                 </label>
                 <textarea
@@ -153,13 +170,14 @@ export function CreateSnippetPopup({ isOpen, onClose, onCreateSnippet }: CreateS
                 ></textarea>
               </div>
               <div className="flex">
-                <Button type="submit" className="bg-purple-600 text-white">Create Snippet</Button>
+                <Button type="submit" className="bg-purple-600 text-white">
+                  Create Snippet
+                </Button>
               </div>
             </form>
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
-  )
+  );
 }
-
