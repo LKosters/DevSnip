@@ -1,25 +1,32 @@
-"use client"
+"use client";
 
-import { Jost } from "next/font/google"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Book, Link2, ImageIcon, Zap, Link as LinkIcon } from "lucide-react"
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef } from "react"
-import { UserButton, SignInButton, SignUpButton, useUser, SignedOut, SignedIn } from "@clerk/nextjs"
-import Link from "next/link"
+import { Jost } from "next/font/google";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Book, Link2, ImageIcon, Zap, Link as LinkIcon } from "lucide-react";
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+import {
+  UserButton,
+  SignInButton,
+  SignUpButton,
+  useUser,
+  SignedOut,
+  SignedIn,
+} from "@clerk/nextjs";
+import Link from "next/link";
 
 const jost = Jost({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-})
+});
 
 // Animation variants
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
-}
+};
 
 const fadeInScale = {
   hidden: { opacity: 0, scale: 0.9 },
@@ -32,7 +39,7 @@ const fadeInScale = {
       damping: 15,
     },
   },
-}
+};
 
 const container = {
   hidden: { opacity: 0 },
@@ -42,16 +49,21 @@ const container = {
       staggerChildren: 0.2,
     },
   },
-}
+};
 
 export default function Home() {
-  const featuresRef = useRef(null)
-  const codeRef = useRef(null)
-  const isInViewFeatures = useInView(featuresRef, { once: true, margin: "-100px" })
-  const isInViewCode = useInView(codeRef, { once: true, margin: "-100px" })
+  const featuresRef = useRef(null);
+  const codeRef = useRef(null);
+  const isInViewFeatures = useInView(featuresRef, {
+    once: true,
+    margin: "-100px",
+  });
+  const isInViewCode = useInView(codeRef, { once: true, margin: "-100px" });
 
   return (
-    <div className={`min-h-screen bg-[#1C1C1C] text-white leading-8 ${jost.className}`}>
+    <div
+      className={`min-h-screen bg-[#1C1C1C] text-white leading-8 ${jost.className}`}
+    >
       {/* Header */}
       <motion.header
         className="container flex items-center justify-between py-4 fixed z-20 left-0 right-0"
@@ -72,7 +84,10 @@ export default function Home() {
         <div className="flex gap-6 items-center">
           <div className="flex items-center gap-6">
             <SignedIn>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <Link href="/dashboard">
                   <Button variant="outline" className="text-black text-lg">
                     View Snippets
@@ -82,14 +97,20 @@ export default function Home() {
             </SignedIn>
             <UserButton afterSignOutUrl="/" />
             <SignedOut>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <SignInButton mode="modal">
                   <Button variant="outline" className="text-black text-lg">
                     Log in
                   </Button>
                 </SignInButton>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <SignUpButton mode="modal">
                   <Button className="text-lg">Register</Button>
                 </SignUpButton>
@@ -120,26 +141,39 @@ export default function Home() {
           <Zap className="size-14 text-purple-600" />
         </motion.div>
         <div className="mx-auto max-w-3xl">
-          <motion.div 
-            variants={fadeIn} 
+          <motion.div
+            variants={fadeIn}
             className="mb-6 inline-block rounded-full bg-purple-600 px-4 py-1 text-sm"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             1.0 out now
           </motion.div>
-          <motion.h1 variants={fadeIn} className="mb-8 text-5xl lg:text-6xl font-bold leading-tight">
-            Create and share beautiful <span className="text-purple-600">code snippets</span>
+          <motion.h1
+            variants={fadeIn}
+            className="mb-8 text-5xl lg:text-6xl font-bold leading-tight"
+          >
+            Create and share beautiful{" "}
+            <span className="text-purple-600">code snippets</span>
           </motion.h1>
-          <motion.div className="w-max mx-auto" variants={fadeIn} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div
+            className="w-max mx-auto"
+            variants={fadeIn}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <SignedIn>
               <Link href="/dashboard">
-                <Button size="lg" className="text-lg">Get started</Button>
+                <Button size="lg" className="text-lg">
+                  Get started
+                </Button>
               </Link>
             </SignedIn>
             <SignedOut>
               <SignUpButton mode="modal">
-                <Button size="lg" className="text-lg">Get started</Button>
+                <Button size="lg" className="text-lg">
+                  Get started
+                </Button>
               </SignUpButton>
             </SignedOut>
           </motion.div>
@@ -154,31 +188,33 @@ export default function Home() {
           variants={container}
           initial="hidden"
           animate={isInViewFeatures ? "visible" : "hidden"}
-      >
-        {[
-          { icon: Book, title: "Clean snippet overview" },
-          { icon: Link2, title: "Easy snippet sharing" },
-          { icon: ImageIcon, title: "Export snippets as PNG" },
-        ].map((feature, index) => (
-          <motion.div
-            key={index}
-            variants={fadeInScale}
-            whileHover={{ y: -5 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Card className="border-none bg-[#353434] transition-colors hover:bg-[#353434]">
-              <CardContent className="flex flex-col items-center gap-4 p-6 text-center">
-                <feature.icon className="size-20 text-purple-600" />
-                <h3 className="text-3xl font-semibold text-white">{feature.title}</h3>
-                <p className="text-gray-400 text-white">
-                  Lorem ipsum odor amet, consectetur adipiscing elit. Cursus adipiscing egestas nibh a sodales tortor
-                  scelerisque.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.section>
+        >
+          {[
+            { icon: Book, title: "Clean snippet overview" },
+            { icon: Link2, title: "Easy snippet sharing" },
+            { icon: ImageIcon, title: "Export snippets as PNG" },
+          ].map((feature, index) => (
+            <motion.div
+              key={index}
+              variants={fadeInScale}
+              whileHover={{ y: -5 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Card className="border-none bg-[#353434] transition-colors hover:bg-[#353434]">
+                <CardContent className="flex flex-col items-center gap-4 p-6 text-center">
+                  <feature.icon className="size-20 text-purple-600" />
+                  <h3 className="text-3xl font-semibold text-white">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-400 text-white">
+                    Lorem ipsum odor amet, consectetur adipiscing elit. Cursus
+                    adipiscing egestas nibh a sodales tortor scelerisque.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.section>
       </div>
       {/* Code Preview Section */}
       <div className="bg-[#292828]">
@@ -197,12 +233,15 @@ export default function Home() {
             className="md:col-span-2"
           >
             <h2 className="mb-6 text-4xl font-bold">
-              What makes this <span className="text-purple-600">code snippet</span> site special?
+              What makes this{" "}
+              <span className="text-purple-600">code snippet</span> site
+              special?
             </h2>
             <p className="text-white">
-              Lorem ipsum odor amet, consectetur adipiscing elit. Cursus adipiscing egestas nibh a sodales tortor
-              scelerisque. Adipiscing nostra dolor pharetra praesent fusce iaculis tristique lacus augue. Tellus varius
-              nam vehicula, praesent ut mus.
+              Lorem ipsum odor amet, consectetur adipiscing elit. Cursus
+              adipiscing egestas nibh a sodales tortor scelerisque. Adipiscing
+              nostra dolor pharetra praesent fusce iaculis tristique lacus
+              augue. Tellus varius nam vehicula, praesent ut mus.
             </p>
           </motion.div>
           <motion.div
@@ -214,9 +253,18 @@ export default function Home() {
             className="rounded-lg bg-black p-4 md:col-span-3"
           >
             <div className="mb-4 flex gap-2">
-              <motion.div className="h-3 w-3 rounded-full bg-red-500" whileHover={{ scale: 1.2 }} />
-              <motion.div className="h-3 w-3 rounded-full bg-yellow-500" whileHover={{ scale: 1.2 }} />
-              <motion.div className="h-3 w-3 rounded-full bg-green-500" whileHover={{ scale: 1.2 }} />
+              <motion.div
+                className="h-3 w-3 rounded-full bg-red-500"
+                whileHover={{ scale: 1.2 }}
+              />
+              <motion.div
+                className="h-3 w-3 rounded-full bg-yellow-500"
+                whileHover={{ scale: 1.2 }}
+              />
+              <motion.div
+                className="h-3 w-3 rounded-full bg-green-500"
+                whileHover={{ scale: 1.2 }}
+              />
             </div>
             <pre className="font-mono text-lg">
               <code>
@@ -262,15 +310,17 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-      >
-        <h2 className="text-4xl lg:text-5xl font-bold">
-          Make it easier to share <br />
-          <span className="text-purple-600">code snippets</span>
-        </h2>
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button size="lg" className="text-lg">Get started</Button>
-        </motion.div>
-      </motion.section>
+        >
+          <h2 className="text-4xl lg:text-5xl font-bold">
+            Make it easier to share <br />
+            <span className="text-purple-600">code snippets</span>
+          </h2>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button size="lg" className="text-lg">
+              Get started
+            </Button>
+          </motion.div>
+        </motion.section>
       </div>
 
       {/* Footer */}
@@ -285,6 +335,5 @@ export default function Home() {
         </motion.footer>
       </div>
     </div>
-  )
+  );
 }
-

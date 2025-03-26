@@ -1,52 +1,54 @@
-'use client'
+"use client";
 
-import Link from "next/link"
-import { Home, User, LogOut, ChevronLeft, ChevronRight } from "lucide-react"
-import { motion } from "framer-motion"
-import { useClerk, UserButton } from "@clerk/nextjs"
-import { useRouter, usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
+import Link from "next/link";
+import { Home, User, LogOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { useClerk, UserButton } from "@clerk/nextjs";
+import { useRouter, usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export function Sidebar() {
-  const { signOut } = useClerk()
-  const router = useRouter()
-  const pathname = usePathname()
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-  const [isLoggingOut, setIsLoggingOut] = useState(false)
-  
+  const { signOut } = useClerk();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth < 768
-      setIsMobile(mobile)
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
       if (mobile) {
-        setIsCollapsed(true)
+        setIsCollapsed(true);
       }
-    }
-    
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     return () => {
-      window.removeEventListener('resize', checkMobile)
-    }
-  }, [])
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
 
   const handleSignOut = async () => {
     if (isLoggingOut) return;
-    
+
     setIsLoggingOut(true);
     try {
       await signOut();
-      router.push('/');
+      router.push("/");
     } catch (error) {
       setIsLoggingOut(false);
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     }
   };
 
   return (
-    <div className={`${isCollapsed ? 'w-20' : isMobile ? 'w-56' : 'w-64'} h-full shadow-md bg-[#292828] text-white transition-all duration-300 fixed md:relative z-10`}>
+    <div
+      className={`${isCollapsed ? "w-20" : isMobile ? "w-56" : "w-64"} h-full shadow-md bg-[#292828] text-white transition-all duration-300 fixed md:relative z-10`}
+    >
       <div className="p-6">
         <Link href="/">
           <div className="flex items-center gap-2 mb-10">
@@ -66,9 +68,9 @@ export function Sidebar() {
           <ul className="space-y-2">
             <li>
               <Link href="/dashboard">
-                <motion.div 
-                  className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'} p-2 rounded hover:bg-purple-600/20 ${
-                    pathname === '/dashboard' ? 'bg-purple-600/20' : ''
+                <motion.div
+                  className={`flex items-center ${isCollapsed ? "justify-center" : "space-x-2"} p-2 rounded hover:bg-purple-600/20 ${
+                    pathname === "/dashboard" ? "bg-purple-600/20" : ""
                   }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -93,12 +95,14 @@ export function Sidebar() {
               </Link>
             </li> */}
           </ul>
-          <div className={`mt-auto pt-2 flex ${isCollapsed ? 'flex-col gap-1' : 'flex-row gap-2'} items-center`}>
+          <div
+            className={`mt-auto pt-2 flex ${isCollapsed ? "flex-col gap-1" : "flex-row gap-2"} items-center`}
+          >
             <div className="w-max flex items-center">
               <UserButton afterSignOutUrl="/" />
             </div>
             <motion.button
-              className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'} p-2 rounded hover:bg-purple-600/20 w-full flex-1`}
+              className={`flex items-center ${isCollapsed ? "justify-center" : "space-x-2"} p-2 rounded hover:bg-purple-600/20 w-full flex-1`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSignOut}
@@ -123,6 +127,5 @@ export function Sidebar() {
         {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </button>
     </div>
-  )
+  );
 }
-

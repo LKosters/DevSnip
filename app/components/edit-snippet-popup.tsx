@@ -1,75 +1,83 @@
-"use client"
+"use client";
 
-import { useState, useRef, useEffect } from "react"
-import { X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
-import { motion, AnimatePresence } from "framer-motion"
-import { db } from "@/lib/firebase"
-import { doc, updateDoc, serverTimestamp } from "firebase/firestore"
+import { useState, useRef, useEffect } from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { motion, AnimatePresence } from "framer-motion";
+import { db } from "@/lib/firebase";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 
 interface EditSnippetPopupProps {
-  isOpen: boolean
-  onClose: () => void
-  onUpdate: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  onUpdate: () => void;
   snippet: {
-    id: string
-    name: string
-    code: string
-  }
+    id: string;
+    name: string;
+    code: string;
+  };
 }
 
-export function EditSnippetPopup({ isOpen, onClose, onUpdate, snippet }: EditSnippetPopupProps) {
-  const [name, setName] = useState(snippet.name)
-  const [code, setCode] = useState(snippet.code)
-  const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
-  const popupRef = useRef<HTMLDivElement>(null)
-  
-  const titleCharLimit = 50
+export function EditSnippetPopup({
+  isOpen,
+  onClose,
+  onUpdate,
+  snippet,
+}: EditSnippetPopupProps) {
+  const [name, setName] = useState(snippet.name);
+  const [code, setCode] = useState(snippet.code);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  const titleCharLimit = 50;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-        onClose()
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        onClose();
       }
     }
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen, onClose])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
     try {
       await updateDoc(doc(db, "snippets", snippet.id), {
         name,
         code,
         updatedAt: serverTimestamp(),
-      })
+      });
 
       toast({
         title: "Success",
         description: "Your snippet has been updated.",
-      })
-      onUpdate()
-      onClose()
+      });
+      onUpdate();
+      onClose();
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update the snippet. Please try again."
-      })
+        description: "Failed to update the snippet. Please try again.",
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -97,7 +105,10 @@ export function EditSnippetPopup({ isOpen, onClose, onUpdate, snippet }: EditSni
             </div>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-medium text-white">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-white"
+                >
                   Name
                 </label>
                 <input
@@ -106,7 +117,7 @@ export function EditSnippetPopup({ isOpen, onClose, onUpdate, snippet }: EditSni
                   value={name}
                   onChange={(e) => {
                     if (e.target.value.length <= titleCharLimit) {
-                      setName(e.target.value)
+                      setName(e.target.value);
                     }
                   }}
                   maxLength={titleCharLimit}
@@ -118,7 +129,10 @@ export function EditSnippetPopup({ isOpen, onClose, onUpdate, snippet }: EditSni
                 </div>
               </div>
               <div className="mb-4">
-                <label htmlFor="code" className="block text-sm font-medium text-white">
+                <label
+                  htmlFor="code"
+                  className="block text-sm font-medium text-white"
+                >
                   Code
                 </label>
                 <textarea
@@ -131,10 +145,19 @@ export function EditSnippetPopup({ isOpen, onClose, onUpdate, snippet }: EditSni
                 ></textarea>
               </div>
               <div className="flex justify-between space-x-2">
-                <Button type="button" variant="outline" onClick={onClose} className="text-white">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onClose}
+                  className="text-white"
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isLoading} className="bg-purple-600 text-white">
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-purple-600 text-white"
+                >
                   {isLoading ? "Saving..." : "Save Changes"}
                 </Button>
               </div>
@@ -143,5 +166,5 @@ export function EditSnippetPopup({ isOpen, onClose, onUpdate, snippet }: EditSni
         </motion.div>
       )}
     </AnimatePresence>
-  )
-} 
+  );
+}

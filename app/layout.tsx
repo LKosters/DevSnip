@@ -3,11 +3,11 @@ import {
   SignInButton,
   SignedIn,
   SignedOut,
-  UserButton
-} from '@clerk/nextjs'
-import './globals.css'
-import { Jost } from "next/font/google"
-import { PostHogProvider } from "./components/providers"
+  UserButton,
+} from "@clerk/nextjs";
+import "./globals.css";
+import { Jost } from "next/font/google";
+import { PostHogProvider } from "./components/providers";
 
 const appearance = {
   layout: {
@@ -24,7 +24,8 @@ const appearance = {
     headerSubtitle: "text-muted-foreground",
     socialButtonsIconButton: "hover:bg-muted",
     formButtonPrimary: "bg-primary hover:bg-primary/90",
-    formFieldInput: "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+    formFieldInput:
+      "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
     userButtonTrigger: "ring-0 focus:ring-0",
     userButtonPopoverCard: "shadow-none",
     userButtonPopoverFooter: "hidden",
@@ -37,66 +38,64 @@ const appearance = {
     organizationSwitcherTriggerButton: "hidden",
   },
   variables: {
-    colorPrimary: '#9333EA',
-    borderRadius: '0.5rem',
+    colorPrimary: "#9333EA",
+    borderRadius: "0.5rem",
   },
-}
+};
 
 const jost = Jost({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-})
+});
 
 export const metadata = {
-  title: 'DevSnip | Easy Code Sharing',
-  description: 'DevSnip is a platform for sharing code snippets with ease.',
+  title: "DevSnip | Easy Code Sharing",
+  description: "DevSnip is a platform for sharing code snippets with ease.",
   icons: {
     icon: [
       {
-        url: '/favicon.ico',
-        sizes: 'any',
+        url: "/favicon.ico",
+        sizes: "any",
       },
       {
-        url: '/favicon-16x16.png',
-        sizes: '16x16',
-        type: 'image/png',
+        url: "/favicon-16x16.png",
+        sizes: "16x16",
+        type: "image/png",
       },
       {
-        url: '/favicon-32x32.png',
-        sizes: '32x32',
-        type: 'image/png',
-      }
+        url: "/favicon-32x32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
     ],
     apple: [
       {
-        url: '/apple-touch-icon.png',
-        sizes: '180x180',
-        type: 'image/png',
+        url: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
       },
     ],
     other: [
       {
-        rel: 'manifest',
-        url: '/site.webmanifest',
-      }
+        rel: "manifest",
+        url: "/site.webmanifest",
+      },
     ],
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <PostHogProvider>
       <ClerkProvider appearance={appearance}>
         <html lang="en" className={jost.className}>
-          <body>
-          {children}
-          </body>
+          <body>{children}</body>
         </html>
       </ClerkProvider>
     </PostHogProvider>
-  )
+  );
 }
