@@ -10,7 +10,3 @@ DevSnip is a modern code snippet sharing platform that makes it easy to store, o
 - Support for multiple programming languages
 - Clean, modern interface
 - Fast and responsive design
-
-## 🚀 Getting Started
-
-- Coming soon -
