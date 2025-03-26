@@ -156,9 +156,21 @@ export default function Home() {
           animate={isInViewFeatures ? "visible" : "hidden"}
       >
         {[
-          { icon: Book, title: "Clean snippet overview" },
-          { icon: Link2, title: "Easy snippet sharing" },
-          { icon: ImageIcon, title: "Export snippets as PNG" },
+          { 
+            icon: Book, 
+            title: "Clean snippet overview",
+            description: "Store and manage your code snippets in one place with beautiful syntax highlighting and automatic language detection."
+          },
+          { 
+            icon: Link2, 
+            title: "Easy snippet sharing",
+            description: "Share your code snippets instantly with anyone through automatically generated unique and permanent URLs."
+          },
+          { 
+            icon: ImageIcon, 
+            title: "Export snippets as PNG",
+            description: "Transform your code snippets into beautiful images with preserved syntax highlighting for social media sharing."
+          },
         ].map((feature, index) => (
           <motion.div
             key={index}
@@ -171,8 +183,7 @@ export default function Home() {
                 <feature.icon className="size-20 text-purple-600" />
                 <h3 className="text-3xl font-semibold text-white">{feature.title}</h3>
                 <p className="text-gray-400 text-white">
-                  Lorem ipsum odor amet, consectetur adipiscing elit. Cursus adipiscing egestas nibh a sodales tortor
-                  scelerisque.
+                  {feature.description}
                 </p>
               </CardContent>
             </Card>
@@ -200,9 +211,7 @@ export default function Home() {
               What makes this <span className="text-purple-600">code snippet</span> site special?
             </h2>
             <p className="text-white">
-              Lorem ipsum odor amet, consectetur adipiscing elit. Cursus adipiscing egestas nibh a sodales tortor
-              scelerisque. Adipiscing nostra dolor pharetra praesent fusce iaculis tristique lacus augue. Tellus varius
-              nam vehicula, praesent ut mus.
+              DevSnip is a modern code snippet sharing platform that helps developers save and share their code. Create snippets with automatic syntax highlighting, share them via unique URLs, or export them as beautiful images. Built with a focus on simplicity and developer experience.
             </p>
           </motion.div>
           <motion.div
@@ -268,7 +277,16 @@ export default function Home() {
           <span className="text-purple-600">code snippets</span>
         </h2>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button size="lg" className="text-lg">Get started</Button>
+        <SignedIn>
+              <Link href="/dashboard">
+                <Button size="lg" className="text-lg">Get started</Button>
+              </Link>
+            </SignedIn>
+            <SignedOut>
+              <SignUpButton mode="modal">
+                <Button size="lg" className="text-lg">Get started</Button>
+              </SignUpButton>
+            </SignedOut>
         </motion.div>
       </motion.section>
       </div>
