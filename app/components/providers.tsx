@@ -11,7 +11,8 @@ export function PostHogProvider({ children }: ProvidersProps) {
   useEffect(() => {
     posthog.init('phc_dn8kh6pSsbWB6QTryqb5KCflzqZsKrTGiNMdUIzvnAB', {
       api_host: 'https://eu.i.posthog.com',
-      person_profiles: 'always'
+      person_profiles: 'always',
+      capture_exceptions: true, // Enable error tracking
     })
   }, [])
 
