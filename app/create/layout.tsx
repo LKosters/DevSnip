@@ -1,12 +1,12 @@
 import "../globals.css"
 import type { Metadata } from "next"
-import { Jost } from "next/font/google"
+import { Noto_Sans_Mono } from "next/font/google"
 import type React from "react"
 import { Sidebar } from "../components/sidebar"
 import { ToastProvider, ToastContainer } from "@/components/ui/use-toast"
 import { PostHogProvider } from "../components/providers"
 
-const jost = Jost({
+const notoSansMono = Noto_Sans_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 })
@@ -23,7 +23,7 @@ export default function CreateLayout({
 }) {
   return (
     <html lang="en">
-      <body className={jost.className}>
+      <body className={notoSansMono.className}>
         <PostHogProvider>
           <ToastProvider>
             <div className="flex h-screen bg-[#1C1C1C]">

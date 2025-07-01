@@ -57,7 +57,7 @@ export function Sidebar() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                1.0
+                2.0
               </motion.span>
             )}
           </div>

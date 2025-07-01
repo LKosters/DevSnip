@@ -1,6 +1,6 @@
 "use client"
 
-import { Jost } from "next/font/google"
+import { Noto_Sans_Mono } from "next/font/google"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Book, Link2, ImageIcon, Zap, Link as LinkIcon } from "lucide-react"
@@ -10,7 +10,7 @@ import { useRef } from "react"
 import { UserButton, SignInButton, SignUpButton, useUser, SignedOut, SignedIn } from "@clerk/nextjs"
 import Link from "next/link"
 
-const jost = Jost({
+const notoSansMono = Noto_Sans_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 })
@@ -51,7 +51,7 @@ export default function Home() {
   const isInViewCode = useInView(codeRef, { once: true, margin: "-100px" })
 
   return (
-    <div className={`min-h-screen bg-[#1C1C1C] text-white leading-8 ${jost.className}`}>
+    <div className={`min-h-screen bg-black text-white leading-8 ${notoSansMono.className}`}>
       {/* Header */}
       <motion.header
         className="container flex items-center justify-between py-4 fixed z-20 left-0 right-0"
@@ -66,7 +66,7 @@ export default function Home() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            1.0
+            2.0
           </motion.span>
         </div>
         <div className="flex gap-6 items-center">
@@ -126,7 +126,7 @@ export default function Home() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            1.0 out now
+            2.0 out now
           </motion.div>
           <motion.h1 variants={fadeIn} className="mb-8 text-5xl lg:text-6xl font-bold leading-tight">
             Create and share beautiful <span className="text-purple-600">code snippets</span>
@@ -147,10 +147,11 @@ export default function Home() {
       </motion.section>
 
       {/* Features Section */}
-      <div className="bg-[#292828]">
+      <div className="relative">
+        <div className="absolute inset-0 bg-[radial-gradient(55%_55%_at_50%_0%,#9C08FE_0%,#9C08FE55_55%,#9C08FE56_56%,transparent_100%)] opacity-20"></div>
         <motion.section
           ref={featuresRef}
-          className="container grid gap-8 py-10 lg:py-24 md:grid-cols-3"
+          className="container grid gap-8 py-10 lg:py-24 md:grid-cols-3 relative z-10"
           variants={container}
           initial="hidden"
           animate={isInViewFeatures ? "visible" : "hidden"}
@@ -178,7 +179,7 @@ export default function Home() {
             whileHover={{ y: -5 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <Card className="border-none bg-[#353434] transition-colors hover:bg-[#353434]">
+            <Card className="border-none bg-[#282828]/70 transition-colors hover:bg-[#353434]">
               <CardContent className="flex flex-col items-center gap-4 p-6 text-center">
                 <feature.icon className="size-20 text-purple-600" />
                 <h3 className="text-3xl font-semibold text-white">{feature.title}</h3>

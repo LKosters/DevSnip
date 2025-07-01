@@ -6,7 +6,7 @@ import {
   UserButton
 } from '@clerk/nextjs'
 import './globals.css'
-import { Jost } from "next/font/google"
+import { Noto_Sans_Mono } from "next/font/google"
 import { PostHogProvider } from "./components/providers"
 
 const appearance = {
@@ -42,7 +42,7 @@ const appearance = {
   },
 }
 
-const jost = Jost({
+const notoSansMono = Noto_Sans_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 })
@@ -91,7 +91,7 @@ export default function RootLayout({
   return (
     <PostHogProvider>
       <ClerkProvider appearance={appearance}>
-        <html lang="en" className={jost.className}>
+        <html lang="en" className={notoSansMono.className}>
           <body>
           {children}
           </body>
